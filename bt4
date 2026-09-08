@@ -1,0 +1,54 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace PaymentGatewaySystem
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = Encoding.UTF8;
+            Console.WriteLine("========== CỔNG THANH TOÁN MOMO ==========" );
+            Console.Write("Nhập mã giao dịch: ");
+            string transactionId = Console.ReadLine();
+            Console.Write("Nhập số điện thoại MoMo: ");
+            string phoneNumber = Console.ReadLine();
+            MomoPayment momo = new MomoPayment(transactionId, phoneNumber );
+            momo.ValidateConnection();
+            momo.DisplayInfo();
+            IPayable payable = momo;
+            Console.WriteLine( "\n========== THANH TOÁN ==========");
+            Console.Write("Nhập số tiền thanh toán: ");
+            decimal paymentAmount = decimal.Parse(Console.ReadLine());
+            bool paymentResult = payable.ProcessPayment(paymentAmount);
+            if (paymentResult)
+            {
+                Console.WriteLine("Thanh toán thành công!");
+            }
+            else
+            {
+                Console.WriteLine("Thanh toán thất bại!");
+            }
+            momo.DisplayInfo();
+            IRefundable refundable = momo;
+            Console.WriteLine( "\n========== HOÀN TIỀN ==========");
+            Console.Write("Nhập số tiền cần hoàn: ");
+            decimal refundAmount = decimal.Parse(Console.ReadLine());
+            Console.Write("Nhập lý do hoàn tiền: ");
+            string reason = Console.ReadLine();
+            bool refundResult = refundable.ProcessRefund(refundAmount,reason);
+            if (refundResult)
+            {
+                Console.WriteLine("Hoàn tiền thành công!");
+            }
+            else
+            {
+                Console.WriteLine("Hoàn tiền thất bại!");
+            }
+            momo.DisplayInfo();
+            Console.WriteLine("\nNhấn phím bất kỳ để thoát...");
+            Console.ReadKey();
+        }
+    }
+}
